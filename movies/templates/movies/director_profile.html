@@ -1,0 +1,25 @@
+<!-- movies/templates/movies/director_profile.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль режиссера</title>
+</head>
+<body>
+    <h1>Профиль режиссера: {{ director.name }}</h1>
+    {% if director.photo %}
+        <img src="{{ director.photo.url }}" alt="Фото режиссера" style="width:200px;">
+    {% endif %}
+    <h2>Фильмы режиссера:</h2>
+    <ul>
+        {% for film in films %}
+        <li>
+            <a href="{% url 'movies:film_detail' film.id %}">{{ film.title }}</a> ({{ film.year }})
+        </li>
+        {% empty %}
+        <li>Нет фильмов для отображения.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'movies:film_list' %}">Вернуться к списку фильмов</a></p>
+</body>
+</html>

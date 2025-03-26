@@ -1,0 +1,51 @@
+<!-- movies/templates/movies/film_list.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список фильмов</title>
+</head>
+<body>
+    <h1>Фильмы</h1>
+    <form method="get">
+        <input type="text" name="q" placeholder="Поиск по названию, году, стране, режиссеру, актеру">
+        <button type="submit">Найти</button>
+        <!-- Можно добавить select для сортировки -->
+        <select name="sort">
+            <option value="">Сортировать по...</option>
+            <option value="year_desc">Год (новые → старые)</option>
+            <option value="year_asc">Год (старые → новые)</option>
+            <option value="kinopoisk_desc">Кинопоиск (высокий → низкий)</option>
+            <option value="kinopoisk_asc">Кинопоиск (низкий → высокий)</option>
+            <option value="imdb_desc">IMDb (высокий → низкий)</option>
+            <option value="imdb_asc">IMDb (низкий → высокий)</option>
+            <option value="user_desc">Пользовательский рейтинг (высокий → низкий)</option>
+            <option value="user_asc">Пользовательский рейтинг (низкий → высокий)</option>
+            <option value="popularity">Популярность</option>
+        </select>
+    </form>
+    <hr>
+    {% for film in films %}
+    <div style="display: flex; margin-bottom: 20px;">
+        <div>
+            <img src="{{ film.poster.url }}" alt="Постер" style="width:100px;">
+        </div>
+        <div style="margin-left: 20px;">
+            <h2><a href="{% url 'movies:film_detail' film.id %}">{{ film.title }}</a></h2>
+            <p>Год: {{ film.year }} | Страна: {{ film.country }} | Продолжительность: {{ film.duration }} мин</p>
+            <p>Режиссер: <a href="{% url 'movies:director_profile' film.director.id %}">{{ film.director.name }}</a></p>
+            <p>Кинопоиск: {{ film.kinopoisk_rating }} | IMDb: {{ film.imdb_rating }}</p>
+            <p>Пользовательский рейтинг: {{ film.user_rating }} ({{ film.user_rating_count }} оценок)</p>
+            <!-- Форма для оценки может быть встроена или на отдельной странице -->
+            {% if user.is_authenticated %}
+            <form action="{% url 'movies:rate_film' film.id %}" method="post">
+                {% csrf_token %}
+                <input type="number" step="0.1" name="rating" min="1" max="10" placeholder="Оцените фильм">
+                <button type="submit">Оценить</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

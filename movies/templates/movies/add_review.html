@@ -1,0 +1,17 @@
+<!-- movies/templates/movies/add_review.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить рецензию</title>
+</head>
+<body>
+    <h1>Добавьте вашу рецензию</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Отправить рецензию</button>
+    </form>
+    <p><a href="{% url 'movies:film_detail' film.id %}">Вернуться к фильму</a></p>
+</body>
+</html>
